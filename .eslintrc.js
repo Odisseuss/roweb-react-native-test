@@ -98,6 +98,6 @@ module.exports = {
 		}],
 		'arrow-parens': ['error', 'as-needed'],
 		'template-curly-spacing': ['off'],
-		'react-native/no-raw-text': ['error', 1],
+		// 'react-native/no-raw-text': ['error', 1],
 	},
 };

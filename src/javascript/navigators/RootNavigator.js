@@ -3,6 +3,7 @@ import { NavigationContainer, } from '@react-navigation/native';
 import { Appearance, StatusBar, } from 'react-native';
 import { createStackNavigator, } from '@react-navigation/stack';
 import Home from '../components/Home/Home.js';
+import HomeNavigator from './HomeNavigator.js';
 
 const { Navigator: StackNavigator, Screen: StackScreen, } = createStackNavigator();
 
@@ -12,7 +13,7 @@ class RootNavigator extends PureComponent {
 
 		this.state = {
 			colourScheme: Appearance.getColorScheme(),
-			initialRouteName: 'Home',
+			initialRouteName: 'HomeScreenNavigator',
 			screenOptions: {
 				headerShown: false,
 			},
@@ -30,8 +31,8 @@ class RootNavigator extends PureComponent {
 						initialRouteName={ initialRouteName }
 						screenOptions={ screenOptions }>
 						<StackScreen
-							name="Home"
-							component={ Home }/>
+							name="HomeScreenNavigator"
+							component={ HomeNavigator }/>
 					</StackNavigator>
 				</NavigationContainer>
 			</>
