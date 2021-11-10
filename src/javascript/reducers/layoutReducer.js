@@ -1,19 +1,20 @@
 export default function layoutReducer(state = { ...defaultState, }, action) {
 	let newState = { ...state, };
 	switch(action.type) {
-		case 'INTERNET_CONNECTION_CHANGE': {
+		case 'NETWORK_STATE_CHANGE': {
 			const { isConnected, } = action.payload;
 			newState.isConnected = isConnected;
 			return newState;
 		}
-		case 'RESET_LAYOUT': {
+		case 'RESET_EVERYTHING': {
 			return { ...defaultState, };
 		}
-		default:
+		default: {
 			return newState;
+		}
 	}
 }
 
 const defaultState = {
-	isConnected: false,
+	isConnected: true,
 };

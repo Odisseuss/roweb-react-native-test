@@ -7,6 +7,7 @@ import { getTopRatedMovies, searchMovies, } from '../../actions/moviesActions.js
 import { texts, } from '../../i18n/en.js';
 import Header from '../Templates/Header.js';
 import { pageTitle, regularText, } from '../../utils/config.js';
+import { AppContext, } from '../../AppContext.js';
 
 class Movies extends PureComponent {
 	constructor(props) {
@@ -40,6 +41,9 @@ class Movies extends PureComponent {
 
 		if (prevState.moviesSearch && !moviesSearch) {
 			dispatch({ type: 'RESET_SEARCH_MOVIES', });
+			if (this.typingTimeout) {
+				clearTimeout(this.typingTimeout);
+			}
 		}
 	}
 
@@ -85,7 +89,7 @@ class Movies extends PureComponent {
 		this.setState({
 			fetchingMovies: true,
 		}, () => {
-			dispatch(getTopRatedMovies(movies.topRatedMoviesPage));
+			dispatch(getTopRatedMovies(movies.topRatedMoviesPage, this._getMoviesCallback));
 		});
 	};
 
@@ -102,7 +106,13 @@ class Movies extends PureComponent {
 			pageNumber: resetPagination ? 1 : movies.filteredMoviesPage,
 		};
 
-		dispatch(searchMovies(data));
+		dispatch(searchMovies(data, this._getMoviesCallback));
+	};
+
+	_getMoviesCallback = movies => {
+		const { client, } = this.context;
+
+		client.emit('ADD_MOVIES_TO_REALM', { movies: movies, });
 	};
 
 	_renderListItem = ({ item, }) => {
@@ -156,11 +166,13 @@ class Movies extends PureComponent {
 
 	_getListHeaderComponent = () => {
 		const { moviesSearch, } = this.state;
+		const { layout, movies, } = this.props;
 
 		return (
 			<>
 				<Header>
 					<Input
+						isReadOnly={ !layout.isConnected }
 						placeholder={ texts.search }
 						variant="filled"
 						width="100%"
@@ -182,6 +194,24 @@ class Movies extends PureComponent {
 						}
 					/>
 				</Header>
+				{ movies.fetchingMoviesError ? (
+					<Box
+						width="100%"
+						my={ 2 }
+						px={ 2 }>
+						<Box
+							bg="red.300"
+							borderRadius="md"
+							justifyContent="center"
+							_text={{ fontSize: '2xl', }}
+							px={ 4 }
+							py={ 2 }>
+							<Text { ...regularText }>
+								{ movies.fetchingMoviesError }
+							</Text>
+						</Box>
+					</Box>
+				) : null }
 				<Text
 					my={ 4 }
 					{ ...pageTitle }>
@@ -211,7 +241,7 @@ class Movies extends PureComponent {
 
 	render() {
 		const { moviesSearch, temporarilyDisableGetMoreTopRatedMovies, } = this.state;
-		const { movies, } = this.props;
+		const { movies, layout, } = this.props;
 
 		return (
 			<Center
@@ -221,29 +251,11 @@ class Movies extends PureComponent {
 					data={ moviesSearch ? movies.filteredMovies : movies.topRatedMovies }
 					keyExtractor={ this._keyExtractor }
 					renderItem={ this._renderListItem }
-					onEndReached={ temporarilyDisableGetMoreTopRatedMovies ? null : this._getTopRatedMovies }
+					onEndReached={ layout.isConnected ? ( temporarilyDisableGetMoreTopRatedMovies ? null : this._getTopRatedMovies ) : null }
 					onEndReachedThreshold={ 0.7 }
 					ListHeaderComponent={ this._getListHeaderComponent }
 					ListFooterComponent={ this._getListFooterComponent }
 					ListEmptyComponent={ this._renderListEmptyComponent }/>
-				{ movies.fetchingMoviesError ? (
-					<Box
-						width="100%"
-						my={ 2 }
-						px={ 2 }>
-						<Box
-							bg="red.300"
-							borderRadius="md"
-							justifyContent="center"
-							_text={{ fontSize: '2xl', }}
-							px={ 4 }
-							py={ 2 }>
-							<Text { ...regularText }>
-								{ movies.fetchingMoviesError }
-							</Text>
-						</Box>
-					</Box>
-				) : null }
 			</Center>
 		);
 	}
@@ -251,6 +263,9 @@ class Movies extends PureComponent {
 
 const mapStateToProps = state => ( {
 	movies: state.movies,
+	layout: state.layout,
 } );
+
+Movies.contextType = AppContext;
 
 export default connect(mapStateToProps)(Movies);

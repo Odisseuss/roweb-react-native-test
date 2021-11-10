@@ -7,6 +7,7 @@ import NetInfo from '@react-native-community/netinfo';
 import { Box, Text, } from 'native-base';
 import { texts, } from '../i18n/en.js';
 import { offlineNotice, } from '../utils/config.js';
+import { connect, } from 'react-redux';
 
 const { Navigator: StackNavigator, Screen: StackScreen, } = createStackNavigator();
 
@@ -20,21 +21,24 @@ class RootNavigator extends PureComponent {
 			screenOptions: {
 				headerShown: false,
 			},
-			isOffline: false,
+			isConnected: true,
 		};
 	}
 
 	componentDidMount() {
+		const { dispatch, } = this.props;
+
 		// No need to unsubscribe
 		NetInfo.addEventListener(state => {
+			dispatch({ type: 'NETWORK_STATE_CHANGE', payload: { isConnected: state.isConnected, }, });
 			this.setState({
-				isOffline: !state.isConnected,
+				isConnected: state.isConnected,
 			});
 		});
 	}
 
 	render() {
-		const { colourScheme, initialRouteName, screenOptions, isOffline, } = this.state;
+		const { colourScheme, initialRouteName, screenOptions, isConnected, } = this.state;
 
 		return (
 			<>
@@ -42,7 +46,7 @@ class RootNavigator extends PureComponent {
 				<Box
 					safeAreaTop
 					bg="white"/>
-				{ isOffline ? (
+				{ !isConnected ? (
 					<Box
 						bg="black"
 						py={ 4 }>
@@ -65,4 +69,4 @@ class RootNavigator extends PureComponent {
 	}
 }
 
-export default RootNavigator;
+export default connect()(RootNavigator);

@@ -1,15 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IMAGES_BASE_URL, } from './config.js';
-
-/**
- * Set a key in AsyncStorage
- * @param key {String}
- * @param value {String}
- * @returns {Promise}
- */
-export const setKeyInStorage = async(key, value) => {
-	return AsyncStorage.setItem(key, value);
-};
+import NetInfo from '@react-native-community/netinfo';
+import axios from 'axios';
 
 /**
  * Sets multiple keys in AsyncStorage
@@ -30,24 +22,6 @@ export const getMultipleKeysFromStorage = async keys => {
 };
 
 /**
- * Get a key from AsyncStorage
- * @param key {String}
- * @returns {Promise}
- */
-export const getKeyFromStorage = async key => {
-	return AsyncStorage.getItem(key);
-};
-
-/**
- * Remove a key from AsyncStorage
- * @param key {String}
- * @returns {Promise}
- */
-export const removeKeyFromStorage = async key => {
-	return AsyncStorage.removeItem(key);
-};
-
-/**
  * Clear AsyncStorage
  * @returns {Promise}
  */
@@ -62,4 +36,19 @@ export const clearStorage = async() => {
  */
 export const getImage = source => {
 	return { uri: `${ IMAGES_BASE_URL }${ source }`, };
+};
+
+/**
+ * Wrapper for axios to prevent an API call that would just fail
+ * @param args {Object}
+ * @returns {Promise}
+ */
+export const axiosWrapper = args => {
+	return NetInfo
+		.fetch()
+		.then(state => {
+			if (state.isConnected) {
+				return axios(args);
+			}
+		});
 };

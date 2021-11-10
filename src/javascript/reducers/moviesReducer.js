@@ -17,11 +17,13 @@ export default function moviesReducer(state = { ...defaultState, }, action) {
 					...( movies || [] )?.filter(movie => !newState.topRatedMovies.some(topRatedMovie => topRatedMovie.id === movie.id))
 				];
 			}
-			newState.topRatedMoviesPage = newState.topRatedMoviesPage + 1;
+			if (movies?.length) {
+				newState.topRatedMoviesPage = newState.topRatedMoviesPage + 1;
+			}
 			return newState;
 		}
 		case 'GET_TOP_RATED_MOVIES_REJECTED': {
-			const { error, } = action.payload;
+			const { error, } = action?.payload || {};
 			newState.fetchingMovies = false;
 			newState.fetchingMoviesError = error;
 			return newState;
@@ -42,11 +44,13 @@ export default function moviesReducer(state = { ...defaultState, }, action) {
 					...( movies || [] )?.filter(movie => !newState.filteredMovies.some(filteredMovie => filteredMovie.id === movie.id))
 				];
 			}
-			newState.filteredMoviesPage = newState.filteredMoviesPage + 1;
+			if (movies?.length) {
+				newState.filteredMoviesPage = newState.filteredMoviesPage + 1;
+			}
 			return newState;
 		}
 		case 'SEARCH_MOVIES_REJECTED': {
-			const { error, } = action.payload;
+			const { error, } = action?.payload || {};
 			newState.fetchingMovies = false;
 			newState.fetchingMoviesError = error;
 			return newState;
@@ -57,7 +61,12 @@ export default function moviesReducer(state = { ...defaultState, }, action) {
 			newState.filteredMoviesPage = 1;
 			return newState;
 		}
-		case 'RESET_MOVIES': {
+		case 'SET_OFFLINE_MOVIES': {
+			const { movies, } = action.payload;
+			newState.topRatedMovies = movies;
+			return newState;
+		}
+		case 'RESET_EVERYTHING': {
 			return { ...defaultState, };
 		}
 		default: {

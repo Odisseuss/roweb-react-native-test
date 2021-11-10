@@ -57,6 +57,9 @@ class Movie extends PureComponent {
 					<Text { ...regularText }>
 						{ 'Rares TODO fill some more data here' }
 					</Text>
+					<Text { ...regularText }>
+						{ 'You can also store the images in cache if you want to and it doesn\'t take too long' }
+					</Text>
 				</Box>
 			</Flex>
 		);
