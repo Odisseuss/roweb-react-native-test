@@ -5,4 +5,8 @@ export const calls = {
 		method: 'GET',
 		url: `${ MOVIE_DB_API_URL }/movie/top_rated?api_key=${ MOVIE_DB_API_KEY }&page=${ pageNumber }`,
 	} ),
+	searchMovies: data => ( {
+		method: 'GET',
+		url: `${ MOVIE_DB_API_URL }/search/movie?api_key=${ MOVIE_DB_API_KEY }&page=${ data.pageNumber }&query=${ data.search }`,
+	} ),
 };

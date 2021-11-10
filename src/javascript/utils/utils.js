@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { IMAGES_BASE_URL, } from './config.js';
 
 /**
  * Set a key in AsyncStorage
@@ -52,4 +53,13 @@ export const removeKeyFromStorage = async key => {
  */
 export const clearStorage = async() => {
 	return AsyncStorage.clear();
+};
+
+/**
+ * Appends the images base url
+ * @param source {String}
+ * @returns {Object}
+ */
+export const getImage = source => {
+	return { uri: `${ IMAGES_BASE_URL }${ source }`, };
 };

@@ -1,16 +1,16 @@
 import React, { PureComponent, } from 'react';
 import { createStackNavigator, } from '@react-navigation/stack';
-import Home from '../components/Home/Home.js';
-import Search from '../components/Home/Search.js';
+import Movies from '../components/Movies/Movies.js';
+import Movie from '../components/Movie/Movie.js';
 
 const { Navigator: StackNavigator, Screen: StackScreen, } = createStackNavigator();
 
-class HomeNavigator extends PureComponent {
+class MoviesNavigator extends PureComponent {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			initialRouteName: 'Home',
+			initialRouteName: 'Movies',
 			screenOptions: {
 				headerShown: false,
 			},
@@ -25,14 +25,14 @@ class HomeNavigator extends PureComponent {
 				initialRouteName={ initialRouteName }
 				screenOptions={ screenOptions }>
 				<StackScreen
-					name="Home"
-					component={ Home }/>
+					name="Movies"
+					component={ Movies }/>
 				<StackScreen
-					name="Search"
-					component={ Search }/>
+					name="Movie"
+					component={ Movie }/>
 			</StackNavigator>
 		);
 	}
 }
 
-export default HomeNavigator;
+export default MoviesNavigator;
