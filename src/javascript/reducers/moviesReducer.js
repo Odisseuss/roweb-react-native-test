@@ -1,19 +1,23 @@
 export default function moviesReducer(state = { ...defaultState, }, action) {
 	let newState = { ...state, };
 	switch(action.type) {
-		case 'RESET_MOVIES': {
-			return { ...defaultState, };
-		}
-		case 'GET_TOP_RATED_MOVIES_START': {
+		case 'GET_TOP_RATED_MOVIES': {
 			newState.fetchingTopRatedMovies = true;
 			return newState;
 		}
 		case 'GET_TOP_RATED_MOVIES_FULFILLED': {
-			const { movies, nextResultPage, } = action.payload;
+			const { movies, pageNumber, } = action.payload;
 			newState.fetchingTopRatedMovies = false;
 			newState.fetchTopRatedMoviesError = null;
-			newState.topRatedMovies = movies;
-			newState.topRatedMoviesPage = nextResultPage;
+			if (newState.topRatedMoviesPage === 1) {
+				newState.topRatedMovies = movies || [];
+			} else {
+				newState.topRatedMovies = [
+					...newState.topRatedMovies,
+					...( movies || [] )
+				];
+			}
+			newState.topRatedMoviesPage = pageNumber + 1;
 			return newState;
 		}
 		case 'GET_TOP_RATED_MOVIES_REJECTED': {
@@ -22,14 +26,18 @@ export default function moviesReducer(state = { ...defaultState, }, action) {
 			newState.fetchTopRatedMoviesError = error;
 			return newState;
 		}
-		default:
+		case 'RESET_MOVIES': {
+			return { ...defaultState, };
+		}
+		default: {
 			return newState;
+		}
 	}
 }
 
 const defaultState = {
 	fetchingTopRatedMovies: false,
 	fetchTopRatedMoviesError: null,
-	topRatedMovies: null,
+	topRatedMovies: [],
 	topRatedMoviesPage: 1,
 };

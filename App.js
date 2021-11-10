@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent, } from 'react';
 import generateNewStore from './src/javascript/store.js';
 import { Provider, } from 'react-redux';
 import RootNavigator from './src/javascript/navigators/RootNavigator.js';
@@ -8,14 +8,10 @@ if (process.env.NODE_ENV === 'development') {
 	const whyDidYouRender = require('@welldone-software/why-did-you-render');
 	whyDidYouRender(React);
 }
+
 let store = generateNewStore();
 
-class App extends React.PureComponent {
-	constructor(props) {
-		super(props);
-
-	}
-
+class App extends PureComponent {
 	render() {
 		return (
 			<NativeBaseProvider>
@@ -23,7 +19,6 @@ class App extends React.PureComponent {
 					<RootNavigator/>
 				</Provider>
 			</NativeBaseProvider>
-
 		);
 	}
 }

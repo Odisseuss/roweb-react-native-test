@@ -1,22 +1,23 @@
 import axios from 'axios';
 import { calls, } from '../utils/calls.js';
 
-export const getTopRatedMovies = (pageNumber, currentMovies) => {
+/**
+ * Get the top rated movies
+ * @param pageNumber {Number}
+ * @returns {Function}
+ */
+export const getTopRatedMovies = pageNumber => {
 	return dispatch => {
-		dispatch({ type: 'GET_TOP_RATED_MOVIES_START', });
+		dispatch({ type: 'GET_TOP_RATED_MOVIES', });
 		return axios(calls.getTopRatedMovies(pageNumber))
-			.then(movies => {
-				if(pageNumber === 1){
-					dispatch({
-						type: 'GET_TOP_RATED_MOVIES_FULFILLED',
-						payload: { movies: movies.data.results, nextResultPage: pageNumber + 1, },
-					});
-				}else{
-					dispatch({
-						type: 'GET_TOP_RATED_MOVIES_FULFILLED',
-						payload: { movies: [...currentMovies, ...movies.data.results], nextResultPage: pageNumber + 1, },
-					});
-				}
+			.then(res => {
+				dispatch({
+					type: 'GET_TOP_RATED_MOVIES_FULFILLED',
+					payload: {
+						movies: res.data?.results,
+						pageNumber: pageNumber,
+					},
+				});
 			})
 			.catch(err => {
 				dispatch({

@@ -1,11 +1,9 @@
-import React, { PureComponent } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { Appearance, StatusBar } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { PureComponent, } from 'react';
+import { createStackNavigator, } from '@react-navigation/stack';
 import Home from '../components/Home/Home.js';
 import Search from '../components/Home/Search.js';
 
-const { Navigator: StackNavigator, Screen: StackScreen } = createStackNavigator();
+const { Navigator: StackNavigator, Screen: StackScreen, } = createStackNavigator();
 
 class HomeNavigator extends PureComponent {
 	constructor(props) {
