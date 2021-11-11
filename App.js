@@ -25,8 +25,11 @@ class App extends PureComponent {
 				id: 'int',
 				title: 'string',
 				overview: 'string',
-				backdrop_path: 'string',
+				backdrop_path: { type: 'string', optional: true, },
 				createdOn: 'date',
+				release_date: {type: 'date', optional: true,},
+				popularity: 'double',
+				vote_average: 'double',
 			},
 			primaryKey: 'id',
 		};
@@ -47,13 +50,13 @@ class App extends PureComponent {
 
 	_addMoviesToRealmListener = payload => {
 		const { movies = [], } = payload;
-
 		this.realm.write(() => {
 			movies.forEach(movie => {
 				// Check if the movie already exists - since those don't change just leave them as they were
 				if (!this.realm.objects('Movie').filtered(`id = ${ movie.id }`)?.length) {
 					this.realm.create('Movie', {
 						...movie,
+						release_date: movie.release_date ? moment(movie.release_date).format() : null,
 						createdOn: moment().format(),
 					});
 				}

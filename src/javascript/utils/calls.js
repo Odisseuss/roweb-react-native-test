@@ -9,4 +9,8 @@ export const calls = {
 		method: 'GET',
 		url: `${ MOVIE_DB_API_URL }/search/movie?api_key=${ MOVIE_DB_API_KEY }&page=${ data.pageNumber }&query=${ data.search }`,
 	} ),
+	getGenres: () => ( {
+		method: 'GET',
+		url: `${ MOVIE_DB_API_URL }/genre/movie/list?api_key=${ MOVIE_DB_API_KEY }`,
+	} ),
 };

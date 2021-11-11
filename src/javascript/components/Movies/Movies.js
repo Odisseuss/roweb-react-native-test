@@ -65,11 +65,13 @@ class Movies extends PureComponent {
 				clearTimeout(this.temporarilyDisableGetMoreTopRatedMoviesTimeout);
 			}
 
-			this.temporarilyDisableGetMoreTopRatedMoviesTimeout = setTimeout(() => {
-				this.setState({
-					temporarilyDisableGetMoreTopRatedMovies: false,
-				});
-			}, 500);
+			if (!value) {
+				this.temporarilyDisableGetMoreTopRatedMoviesTimeout = setTimeout(() => {
+					this.setState({
+						temporarilyDisableGetMoreTopRatedMovies: false,
+					});
+				}, 500);
+			}
 
 			this.typingTimeout = setTimeout(() => {
 				this._getFilteredMovies(true);
@@ -111,7 +113,6 @@ class Movies extends PureComponent {
 
 	_getMoviesCallback = movies => {
 		const { client, } = this.context;
-
 		client.emit('ADD_MOVIES_TO_REALM', { movies: movies, });
 	};
 
@@ -242,7 +243,6 @@ class Movies extends PureComponent {
 	render() {
 		const { moviesSearch, temporarilyDisableGetMoreTopRatedMovies, } = this.state;
 		const { movies, layout, } = this.props;
-
 		return (
 			<Center
 				bg="white"

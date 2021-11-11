@@ -7,4 +7,9 @@ export const texts = {
 	overview: 'Overview',
 	details: 'Details',
 	youAreOffline: 'You are offline',
+	releaseDate: 'Release Date',
+	popularity: 'Popularity',
+	unknown: 'Unknown',
+	rating: 'Rating',
+	noImageAvailable: 'No image available for this movie',
 };

@@ -37,7 +37,7 @@ export const getTopRatedMovies = (pageNumber, callback = null) => {
 };
 
 /**
- * Get the top rated movies
+ * Search movies
  * @param data {Object}
  * @param callback {Function}
  * @returns {Function}

@@ -3,7 +3,9 @@ import { Box, Button, Flex, Image, Text, } from 'native-base';
 import { texts, } from '../../i18n/en.js';
 import Header from '../Templates/Header.js';
 import { getImage, } from '../../utils/utils.js';
-import { pageTitle, regularText, sectionTitle, } from '../../utils/config.js';
+import { centeredRegularText, pageTitle, regularText, sectionTitle, } from '../../utils/config.js';
+import { connect, } from 'react-redux';
+import moment from 'moment';
 
 class Movie extends PureComponent {
 	_goBack = () => {
@@ -14,7 +16,6 @@ class Movie extends PureComponent {
 	render() {
 		const { route, } = this.props;
 		const { movie, } = route.params || {};
-
 		return (
 			<Flex
 				bg="white"
@@ -32,12 +33,21 @@ class Movie extends PureComponent {
 					justifyContent="center"
 					pb={ 2 }
 					px={ 2 }>
-					<Image
-						source={ getImage(movie.backdrop_path) }
-						alt={ movie.title }
-						width="100%"
-						height={ 225 }
-						resizeMode="contain"/>
+					{ movie.backdrop_path ? (
+						<Image
+							source={ getImage(movie.backdrop_path) }
+							alt={ movie.title }
+							width="100%"
+							height={ 225 }
+							resizeMode="contain"/>
+					) : (
+						<Text
+							{ ...centeredRegularText }
+							color={ 'red.500' }
+							my={ 4 }>
+							{ texts.noImageAvailable }
+						</Text>
+					) }
 					<Text
 						{ ...pageTitle }
 						my={ 4 }>
@@ -55,10 +65,13 @@ class Movie extends PureComponent {
 						{ texts.details }
 					</Text>
 					<Text { ...regularText }>
-						{ 'Rares TODO fill some more data here' }
+						{ texts.releaseDate }: { moment(movie.release_date).format('YYYY-MM-DD') || texts.unknown }
 					</Text>
 					<Text { ...regularText }>
-						{ 'You can also store the images in cache if you want to and it doesn\'t take too long' }
+						{ texts.popularity }: { parseInt(movie.popularity) }
+					</Text>
+					<Text { ...regularText }>
+						{ texts.rating }: { movie.vote_average }
 					</Text>
 				</Box>
 			</Flex>
@@ -66,4 +79,8 @@ class Movie extends PureComponent {
 	}
 }
 
-export default Movie;
+const mapStateToProps = state => ( {
+	layout: state.layout,
+} );
+
+export default connect(mapStateToProps)(Movie);
